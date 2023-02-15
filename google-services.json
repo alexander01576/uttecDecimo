@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1035708083787",
+    "project_id": "intedecimo",
+    "storage_bucket": "intedecimo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1035708083787:android:f3cf0c4e92f5309a2027ce",
+        "android_client_info": {
+          "package_name": "com.softing.inteDecimo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1035708083787-kkgdqus3dsh6dgmqi898cgilfdkfqdre.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKQg3QDAzg2ZBauTQeBR3QQIu_xSu-Zwo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1035708083787-kkgdqus3dsh6dgmqi898cgilfdkfqdre.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
