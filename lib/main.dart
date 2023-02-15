@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: <Widget>[
             Image.network(
-                'https://vignette1.wikia.nocookie.net/kpop/images/3/30/SIXTEEN_logo.png',
+                'https://static.vecteezy.com/system/resources/previews/002/392/698/large_2x/car-parking-roadsign-vector.jpg',
                 width: 200),
             Padding(
               padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
