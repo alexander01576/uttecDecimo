@@ -1,8 +1,8 @@
+import 'package:estacionamiento/paginas/adminView.dart';
 import 'package:flutter/material.dart';
 import 'package:estacionamiento/paginas/reservasView.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:quickalert/quickalert.dart';
 
 void main() async {
@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 FirebaseAuth auth = FirebaseAuth.instance;
                 User? user;
                 try {
-                  print('Validando User');
+                  print('Validando Usuario');
 
                   UserCredential userCredential =
                       await auth.signInWithEmailAndPassword(
@@ -102,10 +102,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
                   if (!mounted) return;
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ReservasView()),
-                  );
+                  if (txtUserController.text == 'a@a.com'){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AdminView()),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ReservasView()),
+                    );
+                  }
                 } else {
                   print('Usuario No Válido');
 
