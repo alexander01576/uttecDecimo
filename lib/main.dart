@@ -27,9 +27,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
-
   final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -37,7 +35,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final txtUserController = TextEditingController();
   final txtPassController = TextEditingController();
- 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,31 +74,24 @@ class _MyHomePageState extends State<MyHomePage> {
                 User? user;
                 try {
                   print('Validando Usuario');
-
                   UserCredential userCredential =
                       await auth.signInWithEmailAndPassword(
                     email: txtUserController.text,
                     password: txtPassController.text,
                   );
-
                   user = userCredential.user;
-
                   print('User Found');
                 } on FirebaseAuthException catch (e) {
                   print('Error: ${e.code} ${e.message}');
-
                   if (e.code == 'user-not-found') {
                     print('No user found for that email.');
                   } else if (e.code == 'wrong-password') {
                     print('Wrong password provided.');
                   }
                 }
-
                 if (user != null) {
                   print('Acceso Correcto');
-
                   if (!mounted) return;
-
                   if (txtUserController.text == 'a@a.com'){
                     Navigator.push(
                       context,
@@ -116,7 +106,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   }
                 } else {
                   print('Usuario No Válido');
-
                   QuickAlert.show(
                       context: context,
                       type: QuickAlertType.warning,
