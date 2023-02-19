@@ -7,7 +7,16 @@ import 'package:quickalert/quickalert.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+        apiKey: "AIzaSyAHomJb4E03VUJ9hRIbN3AV2Sp3_GbpUlk",
+        authDomain: "intedecimo.firebaseapp.com",
+        projectId: "intedecimo",
+        storageBucket: "intedecimo.appspot.com",
+        messagingSenderId: "1035708083787",
+        appId: "1:1035708083787:web:64adf9992e1a223d2027ce",
+        measurementId: "G-SDD5PXMXRJ"),
+  );
   runApp(const MyApp());
 }
 
@@ -18,7 +27,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Reserva estacionamiento',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.amber,
       ),
       home: const MyHomePage(title: 'Reservas'),
     );
@@ -40,6 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        backgroundColor: Colors.amber,
       ),
       body: Center(
         child: Column(
@@ -92,10 +102,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 if (user != null) {
                   print('Acceso Correcto');
                   if (!mounted) return;
-                  if (txtUserController.text == 'a@a.com'){
+                  if (txtUserController.text == 'a@a.com') {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const AdminView()),
+                      MaterialPageRoute(
+                          builder: (context) => const AdminView()),
                     );
                   } else {
                     Navigator.push(

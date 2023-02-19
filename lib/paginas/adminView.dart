@@ -13,31 +13,37 @@ class _AdminViewState extends State<AdminView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Administracion"),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.amber,
       ),
       drawer: Drawer(
         child: ListView(
-          // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
                 decoration: const BoxDecoration(
-                  color: Colors.cyan,
+                  color: Colors.amber,
                 ),
                 child: Column(
                   children: [
                     Expanded(
                         child: Image.network(
-                            'https://static.wixstatic.com/media/e75e21_defd59f127ac4f0cb3c1352b7afeccf6~mv2.png')),
+                            'https://cdn-icons-png.flaticon.com/512/2304/2304226.png')),
                     const Text(
-                      "-> Administracion <-",
+                      "Posision: Administracion",
                       style: TextStyle(color: Colors.white),
                     ),
                   ],
                 )),
             ListTile(
-              leading: const Icon(Icons.accessibility),
-              title: const Text('Administracion'),
+              leading: const Icon(Icons.add_road),
+              title: const Text('Espacios'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.view_compact),
+              title: const Text('Estacionamiento'),
               onTap: () {
                 Navigator.pop(context);
               },
