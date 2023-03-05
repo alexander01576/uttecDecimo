@@ -1,22 +1,28 @@
-import 'package:estacionamiento/paginas/adminView.dart';
+import 'package:estacionamiento/paginas/administracion/AdminView.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:estacionamiento/paginas/reservasView.dart';
+import 'package:estacionamiento/paginas/usuario/ReservasView.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:quickalert/quickalert.dart';
 
-void main() async {
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-        apiKey: "AIzaSyAHomJb4E03VUJ9hRIbN3AV2Sp3_GbpUlk",
-        authDomain: "intedecimo.firebaseapp.com",
-        projectId: "intedecimo",
-        storageBucket: "intedecimo.appspot.com",
-        messagingSenderId: "1035708083787",
-        appId: "1:1035708083787:web:64adf9992e1a223d2027ce",
-        measurementId: "G-SDD5PXMXRJ"),
-  );
+  if (kIsWeb){
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: "AIzaSyAHomJb4E03VUJ9hRIbN3AV2Sp3_GbpUlk",
+          authDomain: "intedecimo.firebaseapp.com",
+          projectId: "intedecimo",
+          storageBucket: "intedecimo.appspot.com",
+          messagingSenderId: "1035708083787",
+          appId: "1:1035708083787:web:64adf9992e1a223d2027ce",
+          measurementId: "G-SDD5PXMXRJ"),
+    );
+
+  } else {
+    await Firebase.initializeApp();
+  }
   runApp(const MyApp());
 }
 
