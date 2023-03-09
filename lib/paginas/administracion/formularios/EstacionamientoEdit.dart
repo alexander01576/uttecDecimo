@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'Location.dart';
 
 
 class EstacionamientoEdit extends StatefulWidget {
@@ -65,7 +66,7 @@ class _EstacionamientoEditState extends State<EstacionamientoEdit> {
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+              padding: const EdgeInsets.fromLTRB(30, 30, 30, 20),
               child: TextField(
                 controller: txtNombreEstacionamientoController,
                 decoration: const InputDecoration(
@@ -73,7 +74,7 @@ class _EstacionamientoEditState extends State<EstacionamientoEdit> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+              padding: const EdgeInsets.fromLTRB(30, 0, 30, 20),
               child: TextField(
                 controller: txtCapacidadController,
                 decoration: const InputDecoration(
@@ -82,7 +83,7 @@ class _EstacionamientoEditState extends State<EstacionamientoEdit> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+              padding: const EdgeInsets.fromLTRB(30, 0, 30, 20),
               child: TextField(
                 controller: txtPrecioHoraController,
                 decoration: const InputDecoration(
@@ -91,14 +92,34 @@ class _EstacionamientoEditState extends State<EstacionamientoEdit> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
-              child: TextField(
-                controller: txtDireccionController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Direccion'),
+              padding: const EdgeInsets.fromLTRB(30, 0, 30, 20),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: txtDireccionController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Direccion',
+                      ),
+                    ),
+                  ),
+                  ElevatedButton.icon(
+
+                    icon: Icon(Icons.my_location),
+                    label: Text('ubicar'),
+                    onPressed: () async {
+                      // Obtener ubicación actual
+                      final position = await Location.determinePosition();
+                      // Actualizar campo de texto de dirección con la dirección obtenida
+                      txtDireccionController.text = position.toString();
+                    },
+                  ),
+                ],
               ),
             ),
+
+
             Visibility(
               visible: isVisible,
               child: TextButton(
@@ -120,17 +141,18 @@ class _EstacionamientoEditState extends State<EstacionamientoEdit> {
                   MaterialStateProperty.all<Color>(Colors.blue),
                 ),
                 onPressed: () {
+                  int capacidad = int.tryParse(txtCapacidadController.text) ?? 0;
                   if (idDoc.isEmpty) {
                     collectionEstacionamiento.add({
                       'nombre_estacionamiento': txtNombreEstacionamientoController.text,
-                      'capacidad': txtCapacidadController.text,
+                      'capacidad': capacidad,
                       'precio_hora': txtPrecioHoraController.text,
                       'direccion': txtDireccionController.text
                     });
                   } else {
                     collectionEstacionamiento.doc(idDoc).update({
                       'nombre_estacionamiento': txtNombreEstacionamientoController.text,
-                      'capacidad': txtCapacidadController.text,
+                      'capacidad': capacidad,
                       'precio_hora': txtPrecioHoraController.text,
                       'direccion': txtDireccionController.text
                     });

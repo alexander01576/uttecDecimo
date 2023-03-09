@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'Perfil.dart';
+import 'QrReserva.dart';
 import 'ReservaEdit.dart';
 //import 'QrReserva.dart.txt';
 
@@ -12,6 +15,18 @@ class ReservasView extends StatefulWidget {
 }
 
 class _ReservasViewState extends State<ReservasView> {
+  late FirebaseAuth auth = FirebaseAuth.instance;
+  late User? user = auth.currentUser;
+  late String? userEmail = user?.email;
+
+  @override
+  void initState() {
+    super.initState();
+    auth = FirebaseAuth.instance;
+    user = auth.currentUser;
+    userEmail = user?.email;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,9 +48,14 @@ class _ReservasViewState extends State<ReservasView> {
                     Expanded(
                         child: Image.network(
                             'https://cdn-icons-png.flaticon.com/512/1177/1177568.png')),
+                    const SizedBox(height: 10),
                     const Text(
-                      "Reservas",
+                      "Usuario:",
                       style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      userEmail ?? 'Usuario no identificado',
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ],
                 )),
@@ -44,6 +64,16 @@ class _ReservasViewState extends State<ReservasView> {
               title: const Text('Reservas'),
               onTap: () {
                 Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.portrait),
+              title: const Text('Perfil'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Perfil()),
+                );
               },
             ),
           ],
@@ -66,7 +96,7 @@ class _ReservasViewState extends State<ReservasView> {
                 final DocumentSnapshot documentSnapshot = docs[index];
 
                 return ListTile(
-                    leading: const Icon(Icons.menu_book),
+                    leading: const Icon(Icons.directions_car),
                     title: Text(documentSnapshot['nombre_estacionamiento']),
                     subtitle: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -76,26 +106,26 @@ class _ReservasViewState extends State<ReservasView> {
                       ],
                     ),
                     onTap: () => {
-                      /*Navigator.push(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => QrReserva(
                               idDoc: docs[index].id.toString(),
-                            )),
-                      )*/
+                            )
+                        ),
+                      )
                     });
               });
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.purpleAccent,
+        child: Icon(Icons.add),
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const ReservaEdit(
-                  idDoc: '',
-                )),
+                builder: (context) => ReservaEdit(idDoc: '')),
           );
         },
       ),

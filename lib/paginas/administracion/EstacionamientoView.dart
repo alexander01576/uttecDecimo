@@ -1,20 +1,34 @@
-import 'package:estacionamiento/paginas/administracion/UsuariosView.dart';
+import 'package:estacionamiento/paginas/administracion/Estadisticas.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'EstacionamientoEdit.dart';
+import 'formularios/EstacionamientoEdit.dart';
 
-class AdminView extends StatefulWidget {
-  const AdminView({Key? key}) : super(key: key);
+class EstacionamientoView extends StatefulWidget {
+  const EstacionamientoView({Key? key}) : super(key: key);
   @override
-  State<AdminView> createState() => _AdminViewState();
+  State<EstacionamientoView> createState() => _EstacionamientoViewState();
 }
 
-class _AdminViewState extends State<AdminView> {
+class _EstacionamientoViewState extends State<EstacionamientoView> {
+  late FirebaseAuth auth = FirebaseAuth.instance;
+  late User? user = auth.currentUser;
+  late String? userEmail = user?.email;
+
+  @override
+  void initState() {
+    super.initState();
+    auth = FirebaseAuth.instance;
+    user = auth.currentUser;
+    userEmail = user?.email;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Administracion"),
+        title: const Text("Estacionamientos"),
         backgroundColor: Colors.amber,
       ),
       //vista del menu izquierdo
@@ -32,28 +46,33 @@ class _AdminViewState extends State<AdminView> {
                         child: Image.network(
                             'https://cdn-icons-png.flaticon.com/512/2304/2304226.png')),
                     const Text(
-                      "Administracion",
+                      "Usuario actual",
                       style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      userEmail ?? 'Usuario no identificado',
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ],
                 )),
             ListTile(
               leading: const Icon(Icons.view_compact),
-              title: const Text('Estacionamiento'),
+              title: const Text('Estadisticas'),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Estadisticas()),
+                );
               },
             ),
             ListTile(
               leading: const Icon(Icons.view_compact),
-              title: const Text('Usuarios'),
+              title: const Text('Estacionamientos'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => UsuariosView()),
-                );
+                Navigator.pop(context);
               },
             ),
+
           ],
         ),
       ),
@@ -81,7 +100,8 @@ class _AdminViewState extends State<AdminView> {
                     subtitle: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[Text("Capacidad: " +
+                      children: <Widget>[
+                        Text("Capacidad: " +
                             documentSnapshot['capacidad'].toString()),
                       ],
                     ),

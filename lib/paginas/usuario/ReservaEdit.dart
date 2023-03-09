@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
-
 class ReservaEdit extends StatefulWidget {
   final String idDoc;
   const ReservaEdit({Key? key, required this.idDoc}) : super(key: key);
@@ -14,7 +13,7 @@ class ReservaEdit extends StatefulWidget {
 
 class _ReservaEditState extends State<ReservaEdit> {
   CollectionReference collectionEstacionamiento =
-  FirebaseFirestore.instance.collection('reservas');
+      FirebaseFirestore.instance.collection('reservas');
 
   final txtNombreEstacionamientoController = TextEditingController();
   final txtFechaReservaController = TextEditingController();
@@ -22,7 +21,7 @@ class _ReservaEditState extends State<ReservaEdit> {
   var selectedValue;
 
   final StreamController<QuerySnapshot> controllerEstacionamientos =
-  StreamController<QuerySnapshot>.broadcast();
+      StreamController<QuerySnapshot>.broadcast();
   Stream<QuerySnapshot> get outReservas => controllerEstacionamientos.stream;
   Sink<QuerySnapshot> get inReservas => controllerEstacionamientos.sink;
 
@@ -37,12 +36,14 @@ class _ReservaEditState extends State<ReservaEdit> {
     {
       if (idDoc.isNotEmpty) {
         collectionEstacionamiento.doc(idDoc).get().then((value) => {
-          if (value.exists)
-            {
-              txtNombreEstacionamientoController.text = value['nombre_estacionamiento'].toString(),
-              txtFechaReservaController.text = value['fecha_reserva'].toString(),
-            }
-        });
+              if (value.exists)
+                {
+                  txtNombreEstacionamientoController.text =
+                      value['nombre_estacionamiento'].toString(),
+                  txtFechaReservaController.text =
+                      value['fecha_reserva'].toString(),
+                }
+            });
       } else {
         isVisible = false;
       }
@@ -51,21 +52,73 @@ class _ReservaEditState extends State<ReservaEdit> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> estacionamientos = [];
+    final txtNombreEstacionamientoController = TextEditingController();
+
+    String? _selectedEstacionamiento;
+
+    @override
+    void initState() {
+      super.initState();
+
+      FirebaseFirestore.instance
+          .collection('estacionamientos')
+          .get()
+          .then((querySnapshot) {
+        List<String> estacionamientosList = [];
+        querySnapshot.docs.forEach((doc) {
+          estacionamientosList.add(doc.get('nombre_estacionamiento'));
+        });
+        setState(() {
+          estacionamientos = estacionamientosList;
+        });
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nueva Reserva'),
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.purpleAccent,
       ),
       body: Center(
         child: Column(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
-              child: TextField(
-                controller: txtNombreEstacionamientoController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Nombre del estacionamiento'),
+              child: FutureBuilder<QuerySnapshot>(
+                future: FirebaseFirestore.instance
+                    .collection('estacionamientos')
+                    .get(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text('Error al cargar los estacionamientos');
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  }
+
+                  final estacionamientos = snapshot.data!.docs
+                      .map((doc) => doc['nombre_estacionamiento'] as String)
+                      .toList();
+
+                  return DropdownButtonFormField<String>(
+                    value: _selectedEstacionamiento,
+                    items: estacionamientos
+                        .map(
+                            (nombreEstacionamiento) => DropdownMenuItem<String>(
+                                  value: nombreEstacionamiento,
+                                  child: Text(nombreEstacionamiento),
+                                ))
+                        .toList(),
+                    hint: const Text('Selecciona un estacionamiento'),
+                    onChanged: (selectedEstacionamiento) {
+                      setState(() {
+                        _selectedEstacionamiento = selectedEstacionamiento;
+                      });
+                    },
+                  );
+                },
               ),
             ),
             Padding(
@@ -78,11 +131,12 @@ class _ReservaEditState extends State<ReservaEdit> {
                       setState(() {
                         // Asigna la fecha seleccionada al controlador de texto correspondiente
                         txtFechaReservaController.text =
-                        "${date.year}-${date.month}-${date.day}";
+                            "${date.year}-${date.month}-${date.day}";
                       });
                     },
                     currentTime: DateTime.now(),
-                    locale: LocaleType.es, // Opcional: define el idioma del selector de fecha
+                    locale: LocaleType
+                        .es, // Opcional: define el idioma del selector de fecha
                   );
                 },
                 child: AbsorbPointer(
@@ -100,17 +154,20 @@ class _ReservaEditState extends State<ReservaEdit> {
                 child: const Text("Generar Reserva"),
                 style: ButtonStyle(
                   foregroundColor:
-                  MaterialStateProperty.all<Color>(Colors.blue),
+                      MaterialStateProperty.all<Color>(Colors.blue),
                 ),
                 onPressed: () {
+                  int estaus = 1;
                   if (idDoc.isEmpty) {
                     collectionEstacionamiento.add({
-                      'nombre_estacionamiento': txtNombreEstacionamientoController.text,
+                      'nombre_estacionamiento':
+                          txtNombreEstacionamientoController.text,
                       'fecha_reserva': txtFechaReservaController.text,
                     });
                   } else {
                     collectionEstacionamiento.doc(idDoc).update({
-                      'nombre_estacionamiento': txtNombreEstacionamientoController.text,
+                      'nombre_estacionamiento':
+                          txtNombreEstacionamientoController.text,
                       'fecha_reserva': txtFechaReservaController.text,
                     });
                   }

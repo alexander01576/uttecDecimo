@@ -37,7 +37,8 @@ dependencies:
   quickalert:
   flutter_datetime_picker:
   # qrscan: ^0.3.3
-  # geolocator: ^9.0.2
+  qr_flutter: ^4.0.0
+  geolocator: ^9.0.2
   # permission_handler: ^10.2.0
 
 

@@ -1,4 +1,5 @@
-import 'package:estacionamiento/paginas/administracion/AdminView.dart';
+import 'package:estacionamiento/paginas/administracion/EstacionamientoView.dart';
+import 'package:estacionamiento/paginas/administracion/Estadisticas.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:estacionamiento/paginas/usuario/ReservasView.dart';
@@ -6,9 +7,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:quickalert/quickalert.dart';
 
+import 'RegistroUsuario.dart';
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (kIsWeb){
+  if (kIsWeb) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
           apiKey: "AIzaSyAHomJb4E03VUJ9hRIbN3AV2Sp3_GbpUlk",
@@ -19,7 +22,6 @@ Future main() async {
           appId: "1:1035708083787:web:64adf9992e1a223d2027ce",
           measurementId: "G-SDD5PXMXRJ"),
     );
-
   } else {
     await Firebase.initializeApp();
   }
@@ -61,10 +63,10 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: <Widget>[
             Image.network(
-                'https://static.vecteezy.com/system/resources/previews/002/392/698/large_2x/car-parking-roadsign-vector.jpg',
+                'https://png.pngtree.com/png-clipart/20220911/original/pngtree-parking-png-image_8542900.png',
                 width: 200),
             Padding(
-              padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+              padding: const EdgeInsets.fromLTRB(30, 30, 30, 30),
               child: TextField(
                 controller: txtUserController,
                 decoration: const InputDecoration(
@@ -112,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const AdminView()),
+                          builder: (context) => const Estadisticas()),
                     );
                   } else {
                     Navigator.push(
@@ -130,7 +132,20 @@ class _MyHomePageState extends State<MyHomePage> {
                       text: 'Usuario y/o contraseña son invalidos!!');
                 }
               },
-            )
+            ),
+            TextButton(
+              child: const Text("Registrarse"),
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              ),
+              onPressed: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const RegistroUsuario()),
+                );
+              },
+            ),
           ],
         ),
       ),
