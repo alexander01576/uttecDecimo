@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:estacionamiento/paginas/administracion/EstacionamientoView.dart';
-import 'package:estacionamiento/paginas/administracion/LecturaQR.dart';
+import 'package:estacionamiento/paginas/administracion/estacionamiento_view.dart';
+import 'package:estacionamiento/paginas/administracion/lectura_qr.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +22,7 @@ class _EstadisticasState extends State<Estadisticas> {
         .then((QuerySnapshot snapshot) {
       setState(() {
         numDocs = snapshot.size;
-        print(numDocs);
+        //print(numDocs);
       });
     });
   }
@@ -75,11 +75,11 @@ class _EstadisticasState extends State<Estadisticas> {
                     .then((QuerySnapshot snapshot) {
                   setState(() {
                     numDocs = snapshot.size;
-                    print(numDocs);
+                    //print(numDocs);
                   });
                 })
                     .catchError((error) {
-                  print('Error al obtener el número de documentos: $error');
+                  //print('Error al obtener el número de documentos: $error');
                 });
               },
             ),
@@ -90,7 +90,7 @@ class _EstadisticasState extends State<Estadisticas> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => EstacionamientoView()),
+                      builder: (context) => const EstacionamientoView()),
                 );
               },
             ),
@@ -101,7 +101,7 @@ class _EstadisticasState extends State<Estadisticas> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => LecturaQR()),
+                      builder: (context) => const LecturaQR()),
                 );
               },
             ),

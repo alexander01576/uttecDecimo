@@ -1,13 +1,12 @@
-import 'package:estacionamiento/paginas/administracion/EstacionamientoView.dart';
-import 'package:estacionamiento/paginas/administracion/Estadisticas.dart';
+import 'package:estacionamiento/paginas/administracion/estadisticas.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:estacionamiento/paginas/usuario/ReservasView.dart';
+import 'package:estacionamiento/paginas/usuario/reservas_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:quickalert/quickalert.dart';
 
-import 'RegistroUsuario.dart';
+import 'registro_usuario.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +28,7 @@ Future main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -83,7 +82,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             TextButton(
-              child: const Text("Iniciar sesion"),
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
               ),
@@ -91,24 +89,24 @@ class _MyHomePageState extends State<MyHomePage> {
                 FirebaseAuth auth = FirebaseAuth.instance;
                 User? user;
                 try {
-                  print('Validando Usuario');
+                  //print('Validando Usuario');
                   UserCredential userCredential =
                       await auth.signInWithEmailAndPassword(
                     email: txtUserController.text,
                     password: txtPassController.text,
                   );
                   user = userCredential.user;
-                  print('User Found');
+                  //print('User Found');
                 } on FirebaseAuthException catch (e) {
-                  print('Error: ${e.code} ${e.message}');
+                  //print('Error: ${e.code} ${e.message}');
                   if (e.code == 'user-not-found') {
-                    print('No user found for that email.');
+                    //print('No user found for that email.');
                   } else if (e.code == 'wrong-password') {
-                    print('Wrong password provided.');
+                    //print('Wrong password provided.');
                   }
                 }
                 if (user != null) {
-                  print('Acceso Correcto');
+                  //print('Acceso Correcto');
                   if (!mounted) return;
                   if (txtUserController.text == 'a@a.com') {
                     Navigator.push(
@@ -124,7 +122,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     );
                   }
                 } else {
-                  print('Usuario No Válido');
+                  //print('Usuario No Válido');
+                  // ignore: use_build_context_synchronously
                   QuickAlert.show(
                       context: context,
                       type: QuickAlertType.warning,
@@ -132,9 +131,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       text: 'Usuario y/o contraseña son invalidos!!');
                 }
               },
+              child: const Text("Iniciar sesion"),
             ),
             TextButton(
-              child: const Text("Registrarse"),
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
               ),
@@ -145,6 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       builder: (context) => const RegistroUsuario()),
                 );
               },
+              child: const Text("Registrarse"),
             ),
           ],
         ),

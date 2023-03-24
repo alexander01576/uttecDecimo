@@ -1,19 +1,16 @@
+import 'package:estacionamiento/paginas/administracion/estadisticas.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'formularios/estacionamiento_edit.dart';
 
-import 'Perfil.dart';
-import 'QrReserva.dart';
-import 'ReservaEdit.dart';
-
-class ReservasView extends StatefulWidget {
-  const ReservasView({Key? key}) : super(key: key);
-
+class EstacionamientoView extends StatefulWidget {
+  const EstacionamientoView({Key? key}) : super(key: key);
   @override
-  State<ReservasView> createState() => _ReservasViewState();
+  State<EstacionamientoView> createState() => _EstacionamientoViewState();
 }
 
-class _ReservasViewState extends State<ReservasView> {
+class _EstacionamientoViewState extends State<EstacionamientoView> {
   late FirebaseAuth auth = FirebaseAuth.instance;
   late User? user = auth.currentUser;
   late String? userEmail = user?.email;
@@ -26,12 +23,13 @@ class _ReservasViewState extends State<ReservasView> {
     userEmail = user?.email;
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Reservas"),
-        backgroundColor: Colors.purpleAccent,
+        title: const Text("Estacionamientos"),
+        backgroundColor: Colors.amber,
       ),
       //vista del menu izquierdo
       drawer: Drawer(
@@ -40,16 +38,15 @@ class _ReservasViewState extends State<ReservasView> {
           children: [
             DrawerHeader(
                 decoration: const BoxDecoration(
-                  color: Colors.purpleAccent,
+                  color: Colors.amber,
                 ),
                 child: Column(
                   children: [
                     Expanded(
                         child: Image.network(
-                            'https://cdn-icons-png.flaticon.com/512/1177/1177568.png')),
-                    const SizedBox(height: 10),
+                            'https://cdn-icons-png.flaticon.com/512/2304/2304226.png')),
                     const Text(
-                      "Usuario:",
+                      "Usuario actual",
                       style: TextStyle(color: Colors.white),
                     ),
                     Text(
@@ -60,30 +57,30 @@ class _ReservasViewState extends State<ReservasView> {
                 )),
             ListTile(
               leading: const Icon(Icons.view_compact),
-              title: const Text('Reservas'),
+              title: const Text('Estadisticas'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Estadisticas()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.view_compact),
+              title: const Text('Estacionamientos'),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.portrait),
-              title: const Text('Perfil'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Perfil()),
-                );
-              },
-            ),
+
           ],
         ),
       ),
 
-      //vista de los registros de reservas
+      //vista de la pagina de estacionamientos (primera vista de administracion)
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection('reservas')
-            .where('usuario', isEqualTo: userEmail)
+            .collection('estacionamientos')
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
@@ -98,21 +95,20 @@ class _ReservasViewState extends State<ReservasView> {
                 final DocumentSnapshot documentSnapshot = docs[index];
 
                 return ListTile(
-                    leading: const Icon(Icons.directions_car),
+                    leading: const Icon(Icons.menu_book),
                     title: Text(documentSnapshot['nombre_estacionamiento']),
                     subtitle: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        Text("Fecha reserva: " +
-                            documentSnapshot['fecha_reserva'].toString()),
+                        Text("Capacidad: ${documentSnapshot['capacidad']}"),
                       ],
                     ),
                     onTap: () => {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => QrReserva(
+                                builder: (context) => EstacionamientoEdit(
                                       idDoc: docs[index].id.toString(),
                                     )),
                           )
@@ -121,12 +117,14 @@ class _ReservasViewState extends State<ReservasView> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.purpleAccent,
-        child: Icon(Icons.add),
+        backgroundColor: Colors.amber,
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ReservaEdit(idDoc: '')),
+            MaterialPageRoute(
+                builder: (context) => const EstacionamientoEdit(
+                      idDoc: '',
+                    )),
           );
         },
       ),

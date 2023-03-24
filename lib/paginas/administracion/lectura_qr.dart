@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:estacionamiento/paginas/administracion/EstacionamientoView.dart';
+import 'package:estacionamiento/paginas/administracion/estacionamiento_view.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
@@ -36,7 +36,7 @@ class _LecturaQRState extends State<LecturaQR> {
                         Icons.camera_alt,
                       )),
                   onTap: () async {
-                    var status = await Permission.camera.status;
+                    //var status = await Permission.camera.status;
                     await Permission.camera.request();
                     await Permission.storage.request();
                     String? cameraScanResult = await scanner.scan();
@@ -52,7 +52,7 @@ class _LecturaQRState extends State<LecturaQR> {
                 String reservaID = txtMatriculaController.text;
 
                 // Verifica si la cadena está vacía o nula
-                if (reservaID.isEmpty || reservaID == null) {
+                if (reservaID.isEmpty) {
                   // Muestra una alerta de error si está vacío
                   QuickAlert.show(
                     context: context,
@@ -73,6 +73,7 @@ class _LecturaQRState extends State<LecturaQR> {
                       .get();
                   if (!reservaSnapshot.exists) {
                     // Muestra una alerta de error si la reserva no existe
+                    // ignore: use_build_context_synchronously
                     QuickAlert.show(
                       context: context,
                       type: QuickAlertType.error,
@@ -92,6 +93,7 @@ class _LecturaQRState extends State<LecturaQR> {
                     if (reservaSnapshot.exists &&
                         reservaSnapshot.data()!['estatus'] == 0) {
                       // Muestra una alerta de advertencia si el campo "estatus" ya está establecido en 0
+                      // ignore: use_build_context_synchronously
                       QuickAlert.show(
                         context: context,
                         type: QuickAlertType.warning,
@@ -111,6 +113,7 @@ class _LecturaQRState extends State<LecturaQR> {
                         'estatus': 0,
                       });
                       // Muestra un diálogo de éxito
+                      // ignore: use_build_context_synchronously
                       QuickAlert.show(
                         context: context,
                         type: QuickAlertType.success,
@@ -121,7 +124,7 @@ class _LecturaQRState extends State<LecturaQR> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => EstacionamientoView()),
+                                builder: (context) => const EstacionamientoView()),
                           );
                         },
                       );

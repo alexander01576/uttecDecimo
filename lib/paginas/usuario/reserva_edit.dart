@@ -22,12 +22,15 @@ class _ReservaEditState extends State<ReservaEdit> {
   final txtNombreEstacionamientoController = TextEditingController();
   final txtFechaReservaController = TextEditingController();
   final String idDoc;
-  var selectedValue;
+  String? selectedValue;
   final StreamController<QuerySnapshot> controllerEstacionamientos =
       StreamController<QuerySnapshot>.broadcast();
+
   Stream<QuerySnapshot> get outReservas => controllerEstacionamientos.stream;
+
   Sink<QuerySnapshot> get inReservas => controllerEstacionamientos.sink;
   bool isVisible = true;
+
   _ReservaEditState(this.idDoc);
 
   @override
@@ -53,37 +56,16 @@ class _ReservaEditState extends State<ReservaEdit> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> estacionamientos = [];
-    var txtNombreEstacionamientoController = TextEditingController();
-    String? _selectedEstacionamiento;
-    @override
-    void initState() {
-      super.initState();
-      FirebaseFirestore.instance
-          .collection('estacionamientos')
-          .get()
-          .then((querySnapshot) {
-        List<String> estacionamientosList = [];
-        querySnapshot.docs.forEach((doc) {
-          estacionamientosList.add(doc.get('nombre_estacionamiento'));
-        });
-        setState(() {
-          estacionamientos = estacionamientosList;
-        });
-      });
-    }
+    String? selectedEstacionamiento;
 
     return Scaffold(
-
       appBar: AppBar(
         title: const Text('Nueva Reserva'),
         backgroundColor: Colors.purpleAccent,
       ),
-
       body: Center(
         child: Column(
           children: <Widget>[
-
             Padding(
               padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
               child: GestureDetector(
@@ -113,7 +95,6 @@ class _ReservaEditState extends State<ReservaEdit> {
                 ),
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
               child: FutureBuilder<QuerySnapshot>(
@@ -134,7 +115,7 @@ class _ReservaEditState extends State<ReservaEdit> {
                       .toList();
 
                   return DropdownButtonFormField<String>(
-                    value: _selectedEstacionamiento,
+                    value: selectedEstacionamiento,
                     items: estacionamientos
                         .map(
                             (nombreEstacionamiento) => DropdownMenuItem<String>(
@@ -145,40 +126,37 @@ class _ReservaEditState extends State<ReservaEdit> {
                     hint: const Text('Selecciona un estacionamiento'),
                     onChanged: (selectedEstacionamiento) {
                       setState(() {
-                        _selectedEstacionamiento = selectedEstacionamiento;
-                        txtNombreEstacionamientoController =
-                            selectedEstacionamiento as TextEditingController;
+                        selectedEstacionamiento = selectedEstacionamiento;
                       });
                     },
                   );
                 },
               ),
             ),
-
             TextButton(
-                child: const Text("Generar Reserva"),
-                style: ButtonStyle(
-                  foregroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blue),
-                ),
-                onPressed: () {
-                  int estaus = 1;
-                  if (idDoc.isEmpty) {
-                    collectionEstacionamiento.add({
-                      'nombre_estacionamiento': _selectedEstacionamiento,
-                      'fecha_reserva': txtFechaReservaController.text,
-                      'usuario': userEmail,
-                      'estatus': 0,
-                    });
-                  } /*else {
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              ),
+              onPressed: () {
+                if (idDoc.isEmpty) {
+                  collectionEstacionamiento.add({
+                    'nombre_estacionamiento': selectedEstacionamiento,
+                    'fecha_reserva': txtFechaReservaController.text,
+                    'usuario': userEmail,
+                    'estatus': 0,
+                  });
+                }
+                /*else {
                     collectionEstacionamiento.doc(idDoc).update({
                       'nombre_estacionamiento': _selectedEstacionamiento,
                       'fecha_reserva': txtFechaReservaController.text,
                       'usuario': userEmail,
                     });
                   }*/
-                  Navigator.pop(context);
-                }),
+                Navigator.pop(context);
+              },
+              child: const Text("Generar Reserva"),
+            ),
           ],
         ),
       ),

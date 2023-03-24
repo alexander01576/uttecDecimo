@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -48,17 +46,17 @@ class _QrReservaState extends State<QrReserva> {
           children: [
             Text(
               "Estacionamiento: ${data['nombre_estacionamiento']}",
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               "Fecha de reserva: ${data['fecha_reserva']}",
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text("Estatus reserva: ${data['estatus']}",
-              style: TextStyle(fontSize: 20),),
-            SizedBox(height: 20),
+              style: const TextStyle(fontSize: 20),),
+            const SizedBox(height: 20),
             QrImage(
               data: idDoc,
               version: QrVersions.auto,

@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'Location.dart';
-
+import 'location.dart';
 
 class EstacionamientoEdit extends StatefulWidget {
   final String idDoc;
+
   const EstacionamientoEdit({Key? key, required this.idDoc}) : super(key: key);
 
   @override
@@ -14,20 +14,22 @@ class EstacionamientoEdit extends StatefulWidget {
 }
 
 class _EstacionamientoEditState extends State<EstacionamientoEdit> {
-
   CollectionReference collectionEstacionamiento =
-  FirebaseFirestore.instance.collection('estacionamientos');
+      FirebaseFirestore.instance.collection('estacionamientos');
 
   final txtNombreEstacionamientoController = TextEditingController();
   final txtCapacidadController = TextEditingController();
   final txtPrecioHoraController = TextEditingController();
   final txtDireccionController = TextEditingController();
   final String idDoc;
-  var selectedValue;
+  String? selectedValue;
 
   final StreamController<QuerySnapshot> controllerEstacionamientos =
-  StreamController<QuerySnapshot>.broadcast();
-  Stream<QuerySnapshot> get outEstacionamientos => controllerEstacionamientos.stream;
+      StreamController<QuerySnapshot>.broadcast();
+
+  Stream<QuerySnapshot> get outEstacionamientos =>
+      controllerEstacionamientos.stream;
+
   Sink<QuerySnapshot> get inEstacionamientos => controllerEstacionamientos.sink;
 
   bool isVisible = true;
@@ -41,14 +43,15 @@ class _EstacionamientoEditState extends State<EstacionamientoEdit> {
     {
       if (idDoc.isNotEmpty) {
         collectionEstacionamiento.doc(idDoc).get().then((value) => {
-          if (value.exists)
-            {
-              txtNombreEstacionamientoController.text = value['nombre_estacionamiento'].toString(),
-              txtCapacidadController.text = value['capacidad'].toString(),
-              txtPrecioHoraController.text = value['precio_hora'],
-              txtDireccionController.text = value['direccion'].toString(),
-            }
-        });
+              if (value.exists)
+                {
+                  txtNombreEstacionamientoController.text =
+                      value['nombre_estacionamiento'].toString(),
+                  txtCapacidadController.text = value['capacidad'].toString(),
+                  txtPrecioHoraController.text = value['precio_hora'],
+                  txtDireccionController.text = value['direccion'].toString(),
+                }
+            });
       } else {
         isVisible = false;
       }
@@ -78,8 +81,7 @@ class _EstacionamientoEditState extends State<EstacionamientoEdit> {
               child: TextField(
                 controller: txtCapacidadController,
                 decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Capacidad'),
+                    border: OutlineInputBorder(), hintText: 'Capacidad'),
               ),
             ),
             Padding(
@@ -87,8 +89,7 @@ class _EstacionamientoEditState extends State<EstacionamientoEdit> {
               child: TextField(
                 controller: txtPrecioHoraController,
                 decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Precio por hora'),
+                    border: OutlineInputBorder(), hintText: 'Precio por hora'),
               ),
             ),
             Padding(
@@ -105,9 +106,8 @@ class _EstacionamientoEditState extends State<EstacionamientoEdit> {
                     ),
                   ),
                   ElevatedButton.icon(
-
-                    icon: Icon(Icons.my_location),
-                    label: Text('ubicar'),
+                    icon: const Icon(Icons.my_location),
+                    label: const Text('ubicar'),
                     onPressed: () async {
                       // Obtener ubicación actual
                       final position = await Location.determinePosition();
@@ -118,47 +118,47 @@ class _EstacionamientoEditState extends State<EstacionamientoEdit> {
                 ],
               ),
             ),
-
-
             Visibility(
               visible: isVisible,
               child: TextButton(
-                child: const Text("Eliminar"),
                 style: ButtonStyle(
                   foregroundColor:
-                  MaterialStateProperty.all<Color>(Colors.blue),
+                      MaterialStateProperty.all<Color>(Colors.blue),
                 ),
                 onPressed: () {
                   collectionEstacionamiento.doc(idDoc).delete();
                   Navigator.pop(context);
                 },
+                child: const Text("Eliminar"),
               ),
             ),
             TextButton(
-                child: const Text("Guardar"),
-                style: ButtonStyle(
-                  foregroundColor:
-                  MaterialStateProperty.all<Color>(Colors.blue),
-                ),
-                onPressed: () {
-                  int capacidad = int.tryParse(txtCapacidadController.text) ?? 0;
-                  if (idDoc.isEmpty) {
-                    collectionEstacionamiento.add({
-                      'nombre_estacionamiento': txtNombreEstacionamientoController.text,
-                      'capacidad': capacidad,
-                      'precio_hora': txtPrecioHoraController.text,
-                      'direccion': txtDireccionController.text
-                    });
-                  } else {
-                    collectionEstacionamiento.doc(idDoc).update({
-                      'nombre_estacionamiento': txtNombreEstacionamientoController.text,
-                      'capacidad': capacidad,
-                      'precio_hora': txtPrecioHoraController.text,
-                      'direccion': txtDireccionController.text
-                    });
-                  }
-                  Navigator.pop(context);
-                }),
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              ),
+              onPressed: () {
+                int capacidad = int.tryParse(txtCapacidadController.text) ?? 0;
+                if (idDoc.isEmpty) {
+                  collectionEstacionamiento.add({
+                    'nombre_estacionamiento':
+                        txtNombreEstacionamientoController.text,
+                    'capacidad': capacidad,
+                    'precio_hora': txtPrecioHoraController.text,
+                    'direccion': txtDireccionController.text
+                  });
+                } else {
+                  collectionEstacionamiento.doc(idDoc).update({
+                    'nombre_estacionamiento':
+                        txtNombreEstacionamientoController.text,
+                    'capacidad': capacidad,
+                    'precio_hora': txtPrecioHoraController.text,
+                    'direccion': txtDireccionController.text
+                  });
+                }
+                Navigator.pop(context);
+              },
+              child: const Text("Guardar"),
+            ),
           ],
         ),
       ),

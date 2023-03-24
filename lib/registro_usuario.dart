@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quickalert/quickalert.dart';
 
@@ -45,7 +44,6 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
               ),
             ),
             TextButton(
-              child: const Text("Registrarse"),
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
               ),
@@ -53,14 +51,14 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                 FirebaseAuth auth = FirebaseAuth.instance;
                 User? user;
                 try {
-                  print('Registrando Usuario');
+                  //print('Registrando Usuario');
                   UserCredential userCredential =
                   await auth.createUserWithEmailAndPassword(
                     email: txtUserController.text,
                     password: txtPassController.text,
                   );
                   user = userCredential.user;
-                  print('Usuario creado exitosamente');
+                  //print('Usuario creado exitosamente');
                   // ignore: use_build_context_synchronously
                   QuickAlert.show(
                       context: context,
@@ -68,16 +66,16 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                       title: 'Registro Exitoso: ',
                       text: 'Se ha registrado el correo electrónico: ${user?.email}');
                 } on FirebaseAuthException catch (e) {
-                  print('Error: ${e.code} ${e.message}');
+                  //print('Error: ${e.code} ${e.message}');
                   if (e.code == 'weak-password') {
-                    print('La contraseña es demasiado débil.');
+                    //print('La contraseña es demasiado débil.');
                     QuickAlert.show(
                         context: context,
                         type: QuickAlertType.warning,
                         title: 'Contraseña muy debil',
                         text: 'Intente de nuevo');
                   } else if (e.code == 'email-already-in-use') {
-                    print('El correo electrónico ya está en uso.');
+                    //print('El correo electrónico ya está en uso.');
                     QuickAlert.show(
                         context: context,
                         type: QuickAlertType.warning,
@@ -85,7 +83,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                         text: 'Intente de nuevo');
                   }
                 } catch (e) {
-                  print('Error: $e');
+                  //print('Error: $e');
                   QuickAlert.show(
                       context: context,
                       type: QuickAlertType.warning,
@@ -93,6 +91,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                       text: '$e');
                 }
               },
+              child: const Text("Registrarse"),
             ),
           ],
         ),
