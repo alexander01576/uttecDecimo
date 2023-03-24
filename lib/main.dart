@@ -62,11 +62,11 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           children: <Widget>[
-            Image.network(
+            /*Image.network(
                 'https://png.pngtree.com/png-clipart/20220911/original/pngtree-parking-png-image_8542900.png',
-                width: 200),
+                width: 50),*/
             Padding(
-              padding: const EdgeInsets.fromLTRB(30, 30, 30, 30),
+              padding: const EdgeInsets.fromLTRB(30, 100, 30, 30),
               child: TextField(
                 controller: txtUserController,
                 decoration: const InputDecoration(

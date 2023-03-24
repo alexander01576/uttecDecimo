@@ -81,7 +81,10 @@ class _ReservasViewState extends State<ReservasView> {
 
       //vista de los registros de reservas
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('reservas').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('reservas')
+            .where('usuario', isEqualTo: userEmail)
+            .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return const Center(
@@ -101,19 +104,19 @@ class _ReservasViewState extends State<ReservasView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        Text("Fecha reserva: " + documentSnapshot['fecha_reserva'].toString()),
+                        Text("Fecha reserva: " +
+                            documentSnapshot['fecha_reserva'].toString()),
                       ],
                     ),
                     onTap: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => QrReserva(
-                              idDoc: docs[index].id.toString(),
-                            )
-                        ),
-                      )
-                    });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => QrReserva(
+                                      idDoc: docs[index].id.toString(),
+                                    )),
+                          )
+                        });
               });
         },
       ),
@@ -123,8 +126,7 @@ class _ReservasViewState extends State<ReservasView> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-                builder: (context) => ReservaEdit(idDoc: '')),
+            MaterialPageRoute(builder: (context) => ReservaEdit(idDoc: '')),
           );
         },
       ),

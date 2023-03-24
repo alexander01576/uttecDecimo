@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:estacionamiento/paginas/administracion/EstacionamientoView.dart';
+import 'package:estacionamiento/paginas/administracion/LecturaQR.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -90,6 +91,17 @@ class _EstadisticasState extends State<Estadisticas> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => EstacionamientoView()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.view_compact),
+              title: const Text('Lectura de QR'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => LecturaQR()),
                 );
               },
             ),

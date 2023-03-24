@@ -18,16 +18,11 @@ class _QrReservaState extends State<QrReserva> {
   FirebaseFirestore.instance.collection('estacionamientos');
 
   Map<String, dynamic> data = {};
-
-
   final String idDoc;
-
   _QrReservaState(this.idDoc);
-
   @override
   void initState() {
     super.initState();
-
     FirebaseFirestore.instance
         .collection('reservas')
         .doc(widget.idDoc)
@@ -52,7 +47,7 @@ class _QrReservaState extends State<QrReserva> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Nombre del estacionamiento: ${data['nombre_estacionamiento']}",
+              "Estacionamiento: ${data['nombre_estacionamiento']}",
               style: TextStyle(fontSize: 20),
             ),
             SizedBox(height: 10),
@@ -60,9 +55,12 @@ class _QrReservaState extends State<QrReserva> {
               "Fecha de reserva: ${data['fecha_reserva']}",
               style: TextStyle(fontSize: 20),
             ),
+            SizedBox(height: 10),
+            Text("Estatus reserva: ${data['estatus']}",
+              style: TextStyle(fontSize: 20),),
             SizedBox(height: 20),
             QrImage(
-              data: "${data['nombre_estacionamiento']}-${data['fecha_reserva']}",
+              data: idDoc,
               version: QrVersions.auto,
               size: 300.0,
             ),
