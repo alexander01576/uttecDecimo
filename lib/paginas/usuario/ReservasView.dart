@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Perfil.dart';
 import 'QrReserva.dart';
 import 'ReservaEdit.dart';
-//import 'QrReserva.dart.txt';
 
 class ReservasView extends StatefulWidget {
   const ReservasView({Key? key}) : super(key: key);

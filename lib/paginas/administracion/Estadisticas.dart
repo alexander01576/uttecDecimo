@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:estacionamiento/paginas/administracion/EstacionamientoView.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class Estadisticas extends StatefulWidget {
@@ -15,6 +14,17 @@ class _EstadisticasState extends State<Estadisticas> {
   late FirebaseAuth auth = FirebaseAuth.instance;
   late User? user = auth.currentUser;
   late String? userEmail = user?.email;
+  int numDocs = 0;
+
+  void cargarReserva (){
+    FirebaseFirestore.instance.collection('reservas').get()
+        .then((QuerySnapshot snapshot) {
+      setState(() {
+        numDocs = snapshot.size;
+        print(numDocs);
+      });
+    });
+  }
 
   @override
   void initState() {
@@ -22,31 +32,11 @@ class _EstadisticasState extends State<Estadisticas> {
     auth = FirebaseAuth.instance;
     user = auth.currentUser;
     userEmail = user?.email;
+    cargarReserva();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    int numDocs = 0;
-
-    void getNumDocs() {
-      FirebaseFirestore.instance.collection('reservas').get()
-          .then((QuerySnapshot snapshot) {
-        setState(() {
-          numDocs = snapshot.size;
-          print(numDocs);
-        });
-      })
-          .catchError((error) {
-        print('Error al obtener el número de documentos: $error');
-      });
-    }
-
-    @override
-    void initState() {
-      super.initState();
-      getNumDocs();
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -80,7 +70,16 @@ class _EstadisticasState extends State<Estadisticas> {
               leading: const Icon(Icons.view_compact),
               title: const Text('Estadisticas'),
               onTap: () {
-                Navigator.pop(context);
+                FirebaseFirestore.instance.collection('reservas').get()
+                    .then((QuerySnapshot snapshot) {
+                  setState(() {
+                    numDocs = snapshot.size;
+                    print(numDocs);
+                  });
+                })
+                    .catchError((error) {
+                  print('Error al obtener el número de documentos: $error');
+                });
               },
             ),
             ListTile(
@@ -99,8 +98,23 @@ class _EstadisticasState extends State<Estadisticas> {
       ),
 
       body: Center(
-        child: Text('Hay $numDocs documentos en la colección.'),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.green[300],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: const EdgeInsets.all(20),
+          child: Text(
+            'Hay $numDocs reservas.',
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ),
       ),
+
 
     );
   }
